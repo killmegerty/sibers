@@ -1,0 +1,16 @@
+{
+    "name": "killmegerty/skytecgames",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Minenko Konstantin",
+            "email": "killmegerty@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "require": {}
+}
