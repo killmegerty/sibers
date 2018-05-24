@@ -11,7 +11,7 @@ class ACL {
     $userModel = new User();
     $user = $userModel->getByEmail($email);
     if ($user && $user['password'] === $hashedPassword) {
-      $_SESSION['user_id'] = $user['id'];
+      $_SESSION['user'] = $user;
       return true;
     }
 
@@ -23,9 +23,19 @@ class ACL {
   }
 
   public static function isAuthorized() {
-    if (!empty($_SESSION['user_id'])) {
-      return true;
+    if (!empty($_SESSION['user'])) {
+      $userModel = new User();
+      $user = $userModel->getByEmail($_SESSION['user']['email']);
+      if (!empty($user)) {
+        return true;
+      } else {
+        self::logout();
+      }
     }
     return false;
+  }
+
+  public static function logout() {
+    unset($_SESSION['user']);
   }
 }

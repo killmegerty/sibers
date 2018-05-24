@@ -34,6 +34,23 @@ class View {
     }
   }
 
+  public function element($name) {
+    $elementFilePath = dirname(__DIR__) .
+      DIRECTORY_SEPARATOR .
+      'View' .
+      DIRECTORY_SEPARATOR .
+      'Element' .
+      DIRECTORY_SEPARATOR .
+      $name .
+      '.php';
+    if (file_exists($elementFilePath)) {
+      include $elementFilePath;
+    } else {
+      // 404 error; element not found
+      echo '404 error; element not found';
+    }
+  }
+
   protected function _includeViewFile() {
     $trimmedClassName = str_replace(['App\Controller\\','Controller'], '', $this->_controllerFullName);
     $this->_viewFilePath = dirname(__DIR__) .
@@ -53,12 +70,18 @@ class View {
     }
   }
 
-  public function set($key, $value) {
-    $this->_variables[$key] = $value;
+  public function set($key, $value = '') {
+    if (is_array($key)) {
+      $this->_variables = array_merge($this->_variables, $key);
+    } else {
+      $this->_variables[$key] = $value;
+    }
   }
 
   public function get($key) {
-    return $this->_variables[$key];
+    if (isset($this->_variables[$key])) {
+      return $this->_variables[$key];
+    }
   }
 
   public function setLayout($layoutName) {
