@@ -6,7 +6,7 @@ $router = new Router();
 
 
 // custom routes
-$router->addCustomRoute('/asd', 'IndexController', 'test');
+$router->addCustomRoute('/', 'IndexController', 'login');
 
 
 $router->initRoutes();

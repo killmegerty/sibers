@@ -9,6 +9,7 @@ class Router {
       'methodName' => 'index'
     ]
   ];
+  protected $_reservedMethodNames = ['redirect'];
 
   function __construct() {
 
@@ -42,6 +43,9 @@ class Router {
     if (!empty($explodedUrl[2])) {
       $methodName = strtolower($explodedUrl[2]);
     }
+    if (in_array($methodName, $this->_reservedMethodNames)) {
+      $methodName = 'index';
+    }
 
     $this->_loadControllerMethod($controllerName, $methodName);
   }
@@ -57,11 +61,12 @@ class Router {
   protected function _loadControllerMethod($controllerName, $methodName) {
     $controllerFullName = '\App\Controller\\' . $controllerName;
     if (class_exists($controllerFullName)) {
-      $controller = new $controllerFullName;
-      if (method_exists($controller, $methodName)) {
+      if (method_exists($controllerFullName, $methodName)) {
         if ($this->_isPublicMethod('\App\Controller\\' . $controllerName, $methodName)) {
-          $controller->$methodName();
+          $controller = new $controllerFullName($this, $methodName);
+          // $controller->$methodName();
           // load view
+          // $controller->renderView($methodName);
         } else {
           // 404 error redirect; no controller method
           $this->redirect('/');
@@ -82,6 +87,10 @@ class Router {
   }
 
   public function addCustomRoute($routeUrl, $controllerName, $methodName) {
+    if (in_array($methodName, $this->_reservedMethodNames)) {
+      return false;
+    }
+
     $this->_customRoutes[$routeUrl] = [
       'controllerName' => $controllerName,
       'methodName' => $methodName
