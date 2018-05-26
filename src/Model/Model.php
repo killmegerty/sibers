@@ -49,7 +49,10 @@ class Model {
     $dataStrings = $this->_generateInsertQueryStrings($data);
 
     $result = $this->_db->query('INSERT INTO ' . $this->_table . ' (' . $dataStrings[0] . ') VALUES (' . $dataStrings[1] . ')');
-    return $result;
+    if ($result) {
+      return $this->_db->query('SELECT * FROM ' . $this->_table . ' WHERE id = ' . $this->_db->insert_id)->fetch_assoc();
+    }
+    return false;
   }
 
   protected function _generateUpdateQueryStrings($data) {
