@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use App\Model\Player;
+use App\Model\Rating;
 
 class User extends Model {
   public function __construct() {
@@ -14,14 +15,19 @@ class User extends Model {
     return $result->fetch_assoc();
   }
 
-  public function createWithPlayer($data) {
+  public function createWithRelatedData($data) {
     $user = $this->create($data);
     $playerModel = new Player();
-    $playerModel->create([
+    $ratingModel = new Rating();
+    $player = $playerModel->create([
       'user_id' => $user['id'],
       'health' => Player::HEALTH,
       'damage' => Player::DAMAGE,
       'status' => Player::STATUS_READY
+    ]);
+    $ratingModel->create([
+      'player_id' => $player['id'],
+      'rating' => Rating::RATING
     ]);
     return $user;
   }

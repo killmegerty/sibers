@@ -49,3 +49,43 @@ input[type=submit] {
 
 input[type=submit]:hover {
   background-color: #45a049; }
+
+.delayedShow {
+  visibility: hidden;
+  animation: 0s linear 30s forwards delayedShow; }
+
+.delayedHide {
+  visibility: visible;
+  animation: 0s linear 30s forwards delayedHide; }
+
+@keyframes delayedShow {
+  to {
+    visibility: visible; } }
+
+@keyframes delayedHide {
+  to {
+    visibility: hidden; } }
+
+.countdown:before {
+  content: '302928272625242322212019181716151413121110090807060504030201';
+  font-family: monospace;
+  display: inline-block;
+  width: 2ch;
+  overflow: hidden;
+  animation: countdowns 30s steps(30); }
+
+@keyframes countdowns {
+  0% {
+    text-indent: 0; }
+  100% {
+    text-indent: -60ch; } }
+
+.health-bar {
+  position: relative;
+  width: 100px;
+  height: 10px;
+  background-color: red; }
+  .health-bar .hb-current-health {
+    height: 10px;
+    background-color: green;
+    width: 100%; }

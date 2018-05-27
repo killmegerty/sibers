@@ -17,4 +17,9 @@ class Player extends Model {
     $result = $this->_db->query('SELECT * FROM ' . $this->_table . ' WHERE user_id = \'' . $id . '\'');
     return $result->fetch_assoc();
   }
+
+  public function findOpponentPlayer($currentPlayerId) {
+    $result = $this->_db->query('SELECT * FROM ' . $this->_table . ' WHERE id != \'' . $currentPlayerId . '\' AND status = \'' . self::STATUS_IN_QUEUE . '\'' . ' LIMIT 1');
+    return $result->fetch_assoc();
+  }
 }

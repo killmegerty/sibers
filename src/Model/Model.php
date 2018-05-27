@@ -59,10 +59,15 @@ class Model {
     $output = '';
 
     foreach ($data as $key => $value) {
-      $output .= '`' . $key . '`=\'' . $value . '\',';
+      if (strlen($value) == 0) {
+        $output .= '`' . $key . '`=NULL,';
+      } else {
+        $output .= '`' . $key . '`=\'' . $value . '\',';
+      }
     }
     // remove last ','
     $output = substr($output, 0, -1);
+
     return $output;
   }
 
