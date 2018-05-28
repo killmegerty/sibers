@@ -14,12 +14,45 @@ class Player extends Model {
   }
 
   public function getByUserId($id) {
-    $result = $this->_db->query('SELECT * FROM ' . $this->_table . ' WHERE user_id = \'' . $id . '\'');
-    return $result->fetch_assoc();
+    return $this->_db->fetch("SELECT * FROM {$this->_table} WHERE user_id = ?", 'i', [$id]);
+
+    // $stmt = $this->_db->prepare("SELECT * FROM {$this->_table} WHERE user_id = ?");
+    // if ($stmt) {
+    //   $stmt->bind_param("i", $id);
+    //   $stmt->execute();
+    //   $res = $stmt->get_result();
+    //   $row = $res->fetch_all(MYSQLI_ASSOC);
+    //   $stmt->close();
+    //   if ($row) {
+    //     return $row[0];
+    //   }
+    // }
+    // return NULL;
   }
 
   public function findOpponentPlayer($currentPlayerId) {
-    $result = $this->_db->query('SELECT * FROM ' . $this->_table . ' WHERE id != \'' . $currentPlayerId . '\' AND status = \'' . self::STATUS_IN_QUEUE . '\'' . ' LIMIT 1');
-    return $result->fetch_assoc();
+    $statusInQueue = self::STATUS_IN_QUEUE;
+    return $this->_db->fetch("SELECT * FROM {$this->_table} WHERE id != ? AND status = ? LIMIT 1", 'is', [$currentPlayerId, $statusInQueue]);
+
+    // $statusInQueue = self::STATUS_IN_QUEUE;
+    // $stmt = $this->_db->prepare("SELECT * FROM {$this->_table} WHERE id != ? AND status = ? LIMIT 1");
+    // if ($stmt) {
+    //   $stmt->bind_param("is", $currentPlayerId, $statusInQueue);
+    //   $stmt->execute();
+    //   $res = $stmt->get_result();
+    //   $row = $res->fetch_all(MYSQLI_ASSOC);
+    //   $stmt->close();
+    //   if ($row) {
+    //     return $row[0];
+    //   }
+    // }
+    // return NULL;
+  }
+
+  public function setReadyStatus($playerId) {
+    $this->update($playerId, [
+      'game_id' => NULL,
+      'status' => Player::STATUS_READY
+    ]);
   }
 }

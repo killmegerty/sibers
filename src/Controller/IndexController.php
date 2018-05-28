@@ -14,10 +14,6 @@ class IndexController extends AppController {
     $this->view->set('test', json_encode(['test' => 'asdasd']));
   }
 
-  public function test() {
-    echo 'authorized';
-  }
-
   public function login() {
     if (isset($_POST['email']) && isset($_POST['password'])) {
       $userModel = new User();

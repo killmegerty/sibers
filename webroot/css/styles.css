@@ -6,6 +6,17 @@ body {
   margin: 0;
   background: linear-gradient(to bottom, #8cb8ff, rgba(140, 184, 255, 0)); }
 
+.debugger-container {
+  box-sizing: border-box;
+  padding-left: 5px;
+  padding-right: 5px;
+  display: block;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  bottom: 0;
+  color: white; }
+
 .game-container {
   box-sizing: border-box;
   padding: 30px 15px;

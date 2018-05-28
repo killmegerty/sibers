@@ -39,4 +39,12 @@
     <?php endif; ?>
   </form>
 
+  <div class="game-log-container">
+    <?php if ($this->get('gameLog')) : ?>
+      <div class="">
+        <?php var_dump($this->get('gameLog')); ?>
+      </div>
+    <?php endif; ?>
+  </div>
+
 <?php endif; ?>

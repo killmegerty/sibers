@@ -6,6 +6,7 @@ use App\Model\User;
 use App\Model\Player;
 use App\Model\Rating;
 use App\Model\Game;
+use App\Model\GameLog;
 use App\Service\ACL;
 
 class GameController extends AppController {
@@ -17,19 +18,13 @@ class GameController extends AppController {
   public function winner() {
     $authorizedUser = ACL::getAuthorizedUser();
     $playerModel = new Player();
-    $player = $playerModel->getByUserId($authorizedUser['id']);
-    $player['game_id'] = NULL;
-    $player['status'] = Player::STATUS_READY;
-    $playerModel->update($player['id'], $player);
+    $playerModel->setReadyStatus($authorizedUser['id']);
   }
 
   public function looser() {
     $authorizedUser = ACL::getAuthorizedUser();
     $playerModel = new Player();
-    $player = $playerModel->getByUserId($authorizedUser['id']);
-    $player['game_id'] = NULL;
-    $player['status'] = Player::STATUS_READY;
-    $playerModel->update($player['id'], $player);
+    $playerModel->setReadyStatus($authorizedUser['id']);
   }
 
   public function duels() {
@@ -39,6 +34,7 @@ class GameController extends AppController {
     $playerModel = new Player();
     $player = $playerModel->getByUserId($authorizedUser['id']);
     $gameModel = new Game();
+    $gameLogModel = new GameLog();
     $game = null;
     $opponentPlayer = null;
     if ($player['game_id'] && $player['status'] == Player::STATUS_IN_GAME) {
@@ -64,6 +60,7 @@ class GameController extends AppController {
       $playerModel->update($player['id'], $player);
     }
     if (isset($_POST['hitOpponent']) && isset($game)) {
+      $gameLogModel->addLogMsg($game['id'], 'Player ID:' . $player['id'] . ' hit Player ID:' . $opponentPlayer['id'] . ' on ' . $player['damage'] . ' damage');
       if ($game['player_1_id'] == $player['id']) {
         $game['player_2_health'] = $game['player_2_health'] - $game['player_1_damage'];
       } else {
@@ -117,6 +114,7 @@ class GameController extends AppController {
     } else if ($player['status'] == Player::STATUS_IN_QUEUE) {
       // search opponent
       $opponentPlayer = $playerModel->findOpponentPlayer($player['id']);
+
       if ($opponentPlayer) {
         // create game
         $game = $gameModel->create([
@@ -142,6 +140,8 @@ class GameController extends AppController {
       $this->view->set('playerStatus', Player::STATUS_IN_GAME);
       if ($game) {
         $this->_redirectGameOver($game, $player);
+        $gameLog = $gameLogModel->getLog($game['id']);
+        $this->view->set('gameLog', $gameLog);
         if ($game['player_1_id'] == $player['id']) {
           $this->view->set('player', [
             'player_id' => $game['player_1_id'],
