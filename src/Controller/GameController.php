@@ -21,7 +21,7 @@ class GameController extends AppController {
     $playerModel->setReadyStatus($authorizedUser['id']);
   }
 
-  public function looser() {
+  public function loser() {
     $authorizedUser = ACL::getAuthorizedUser();
     $playerModel = new Player();
     $playerModel->setReadyStatus($authorizedUser['id']);
@@ -111,6 +111,7 @@ class GameController extends AppController {
       }
       $this->view->set('playerStatus', Player::STATUS_READY);
       $this->view->set('autoReloadPage', false);
+      $this->view->set('player', $player);
     } else if ($player['status'] == Player::STATUS_IN_QUEUE) {
       // search opponent
       $opponentPlayer = $playerModel->findOpponentPlayer($player['id']);
@@ -177,11 +178,18 @@ class GameController extends AppController {
             'healthPerc' => round($game['player_1_health'] / $opponentPlayer['health'] * 100)
           ]);
         }
-        $this->view->set('autoReloadPage', true);
-        $this->view->set('delayedAttackBtn', false);
-      } else {
-        $this->view->set('autoReloadPage', false);
-        $this->view->set('delayedAttackBtn', true);
+        // $this->view->set('autoReloadPage', true);
+        // $this->view->set('delayedAttackBtn', false);
+        $gameCreated = new \DateTime($game['created_at']);
+        $now = new \DateTime();
+        $diffInSeconds = $now->getTimestamp() - $gameCreated->getTimestamp();
+        if ($diffInSeconds < 30) {
+          $this->view->set('autoReloadPage', false);
+          $this->view->set('delayedAttackBtn', true);
+        } else {
+          $this->view->set('autoReloadPage', true);
+          $this->view->set('delayedAttackBtn', false);
+        }
       }
     }
 
@@ -192,7 +200,7 @@ class GameController extends AppController {
       if ($game['winner_player_id'] == $currentPlayer['id']) {
         $this->_redirect('/game/winner');
       } else {
-        $this->_redirect('/game/looser');
+        $this->_redirect('/game/loser');
       }
     }
   }

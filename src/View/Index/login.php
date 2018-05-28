@@ -7,5 +7,5 @@
     <?= $this->get('error') ?>
   </div>
 
-  <button type="submit" class="button">Login</button>
+  <button type="submit" class="mt-10">Login</button>
 </form>

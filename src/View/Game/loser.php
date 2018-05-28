@@ -1,6 +1,6 @@
 <?= $this->element('logout_button') ?>
 <div class="game-window-container">
-  You win
+  You lose
   <div class="action-bar-container">
     <a href="/game">
       <button>Home</button>
