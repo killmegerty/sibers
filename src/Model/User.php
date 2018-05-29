@@ -33,6 +33,7 @@ class User extends Model {
     $ratingModel = new Rating();
     $player = $playerModel->create([
       'user_id' => $user['id'],
+      'name' => $user['email'],
       'health' => Player::HEALTH,
       'damage' => Player::DAMAGE,
       'status' => Player::STATUS_READY

@@ -42,13 +42,7 @@ class ACL {
 
   public static function isAuthorized() {
     if (!empty($_SESSION['user'])) {
-      $userModel = new User();
-      $user = $userModel->getByEmail($_SESSION['user']['email']);
-      if (!empty($user)) {
-        return true;
-      } else {
-        self::logout();
-      }
+      return true;
     }
     return false;
   }

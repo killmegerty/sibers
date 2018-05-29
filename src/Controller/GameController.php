@@ -10,7 +10,7 @@ use App\Model\GameLog;
 use App\Service\ACL;
 
 class GameController extends AppController {
-  public $restrictedAccessMethods = ['index', 'duels'];
+  public $restrictedAccessMethods = ['index', 'duels', 'winner', 'loser'];
 
   public function index() {
   }
@@ -18,13 +18,13 @@ class GameController extends AppController {
   public function winner() {
     $authorizedUser = ACL::getAuthorizedUser();
     $playerModel = new Player();
-    $playerModel->setReadyStatus($authorizedUser['id']);
+    $playerModel->setReadyStatusByUserId($authorizedUser['id']);
   }
 
   public function loser() {
     $authorizedUser = ACL::getAuthorizedUser();
     $playerModel = new Player();
-    $playerModel->setReadyStatus($authorizedUser['id']);
+    $playerModel->setReadyStatusByUserId($authorizedUser['id']);
   }
 
   public function duels() {
@@ -40,9 +40,9 @@ class GameController extends AppController {
     if ($player['game_id'] && $player['status'] == Player::STATUS_IN_GAME) {
       $game = $gameModel->get($player['game_id']);
       if ($game['player_1_id'] == $player['id']) {
-        $opponentPlayer = $playerModel->get($game['player_2_id']);
+        $opponentPlayer = $playerModel->getByUserId($game['player_2_user_id']);
       } else {
-        $opponentPlayer = $playerModel->get($game['player_1_id']);
+        $opponentPlayer = $playerModel->getByUserId($game['player_1_user_id']);
       }
     }
 
@@ -51,13 +51,13 @@ class GameController extends AppController {
       $this->view->set('playerStatus', Player::STATUS_IN_QUEUE);
       $this->view->set('autoReloadPage', true);
       $player['status'] = Player::STATUS_IN_QUEUE;
-      $playerModel->update($player['id'], $player);
+      $playerModel->updateByUserId($player['user_id'], $player);
     }
     if (isset($_POST['quitQueue'])) {
       $this->view->set('playerStatus', Player::STATUS_READY);
       $this->view->set('autoReloadPage', false);
       $player['status'] = Player::STATUS_READY;
-      $playerModel->update($player['id'], $player);
+      $playerModel->updateByUserId($player['user_id'], $player);
     }
     if (isset($_POST['hitOpponent']) && isset($game)) {
       $gameLogModel->addLogMsg($game['id'], 'Player ID:' . $player['id'] . ' hit Player ID:' . $opponentPlayer['id'] . ' on ' . $player['damage'] . ' damage');
@@ -67,8 +67,8 @@ class GameController extends AppController {
         $game['player_1_health'] = $game['player_1_health'] - $game['player_2_damage'];
       }
       if ($game['player_1_health'] <= 0 || $game['player_2_health'] <= 0) {
-        $playerOne = $playerModel->get($game['player_1_id']);
-        $playerTwo = $playerModel->get($game['player_2_id']);
+        $playerOne = $playerModel->getByUserId($game['player_1_user_id']);
+        $playerTwo = $playerModel->getByUserId($game['player_2_user_id']);
 
         if ($game['player_1_health'] <= 0) {
           $game['winner_player_id'] = $game['player_2_id'];
@@ -96,8 +96,8 @@ class GameController extends AppController {
         $playerOne['health'] += 1;
         $playerTwo['damage'] += 1;
         $playerTwo['health'] += 1;
-        $playerModel->update($playerOne['id'], $playerOne);
-        $playerModel->update($playerTwo['id'], $playerTwo);
+        $playerModel->updateByUserId($playerOne['user_id'], $playerOne);
+        $playerModel->updateByUserId($playerTwo['user_id'], $playerTwo);
       }
       $gameModel->update($game['id'], $game);
 
@@ -120,9 +120,11 @@ class GameController extends AppController {
         // create game
         $game = $gameModel->create([
           'player_1_id' => $player['id'],
+          'player_1_user_id' => $player['user_id'],
           'player_1_health' => $player['health'],
           'player_1_damage' => $player['damage'],
           'player_2_id' => $opponentPlayer['id'],
+          'player_2_user_id' => $opponentPlayer['user_id'],
           'player_2_health' => $opponentPlayer['health'],
           'player_2_damage' => $opponentPlayer['damage'],
           'created_at' => date('Y-m-d H:i:s')
@@ -130,10 +132,10 @@ class GameController extends AppController {
         // update players data
         $player['status'] = Player::STATUS_IN_GAME;
         $player['game_id'] = $game['id'];
-        $playerModel->update($player['id'], $player);
+        $playerModel->updateByUserId($player['user_id'], $player);
         $opponentPlayer['status'] = Player::STATUS_IN_GAME;
         $opponentPlayer['game_id'] = $game['id'];
-        $playerModel->update($opponentPlayer['id'], $opponentPlayer);
+        $playerModel->updateByUserId($opponentPlayer['user_id'], $opponentPlayer);
       }
       $this->view->set('playerStatus', Player::STATUS_IN_QUEUE);
       $this->view->set('autoReloadPage', true);
@@ -146,6 +148,7 @@ class GameController extends AppController {
         if ($game['player_1_id'] == $player['id']) {
           $this->view->set('player', [
             'player_id' => $game['player_1_id'],
+            'name' => $player['name'],
             'health' => $player['health'],
             'damage' => $player['damage'],
             'currentHealth' => $game['player_1_health'],
@@ -154,6 +157,7 @@ class GameController extends AppController {
           ]);
           $this->view->set('opponent', [
             'player_id' => $game['player_2_id'],
+            'name' => $opponentPlayer['name'],
             'health' => $opponentPlayer['health'],
             'damage' => $opponentPlayer['damage'],
             'currentHealth' => $game['player_2_health'],
@@ -163,6 +167,7 @@ class GameController extends AppController {
         } else {
           $this->view->set('player', [
             'player_id' => $game['player_2_id'],
+            'name' => $player['name'],
             'health' => $player['health'],
             'damage' => $player['damage'],
             'currentHealth' => $game['player_2_health'],
@@ -171,6 +176,7 @@ class GameController extends AppController {
           ]);
           $this->view->set('opponent', [
             'player_id' => $game['player_1_id'],
+            'name' => $opponentPlayer['name'],
             'health' => $opponentPlayer['health'],
             'damage' => $opponentPlayer['damage'],
             'currentHealth' => $game['player_1_health'],
@@ -178,8 +184,6 @@ class GameController extends AppController {
             'healthPerc' => round($game['player_1_health'] / $opponentPlayer['health'] * 100)
           ]);
         }
-        // $this->view->set('autoReloadPage', true);
-        // $this->view->set('delayedAttackBtn', false);
         $gameCreated = new \DateTime($game['created_at']);
         $now = new \DateTime();
         $diffInSeconds = $now->getTimestamp() - $gameCreated->getTimestamp();

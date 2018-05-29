@@ -13,8 +13,32 @@ class Player extends Model {
     parent::__construct('players');
   }
 
+  public function updateByUserId($id, $newPlayerData) {
+    $mcKeyPrefix = 'player_user_id_';
+
+    $id = (int)$id;
+    $dataStrings = $this->_generateUpdateQueryStrings($newPlayerData);
+    $this->_db->query('UPDATE ' . $this->_table . ' SET ' . $dataStrings . ' WHERE user_id = ' . $id);
+
+    if ($player = $this->mc->get($mcKeyPrefix . $id)) {
+      $player = array_merge($player, $newPlayerData);
+      $this->mc->set($mcKeyPrefix . $id, $player);
+      return $player;
+    } else {
+      $this->mc->set($mcKeyPrefix . $id, $newPlayerData);
+    }
+  }
+
   public function getByUserId($id) {
-    return $this->_db->fetch("SELECT * FROM {$this->_table} WHERE user_id = ?", 'i', [$id]);
+    $mcKeyPrefix = 'player_user_id_';
+    if ($player = $this->mc->get($mcKeyPrefix . $id)) {
+      return $player;
+    } else {
+      $player = $this->_db->fetch("SELECT * FROM {$this->_table} WHERE user_id = ?", 'i', [$id]);
+      $this->mc->set($mcKeyPrefix . $id, $player);
+      return $player;
+    }
+    // return $this->_db->fetch("SELECT * FROM {$this->_table} WHERE user_id = ?", 'i', [$id]);
 
     // $stmt = $this->_db->prepare("SELECT * FROM {$this->_table} WHERE user_id = ?");
     // if ($stmt) {
@@ -49,8 +73,8 @@ class Player extends Model {
     // return NULL;
   }
 
-  public function setReadyStatus($playerId) {
-    $this->update($playerId, [
+  public function setReadyStatusByUserId($id) {
+    $this->updateByUserId($id, [
       'game_id' => NULL,
       'status' => Player::STATUS_READY
     ]);

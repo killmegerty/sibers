@@ -27,7 +27,7 @@ class IndexController extends AppController {
           ]);
         }
       } else {
-        $user = $userModel->createWithPlayer([
+        $user = $userModel->createWithRelatedData([
           'email' => $_POST['email'],
           'password' => ACL::hashUserPassword($_POST['password'])
         ]);

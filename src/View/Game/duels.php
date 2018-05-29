@@ -28,10 +28,14 @@
   <?php elseif ($this->get('playerStatus') == 'in_game') : ?>
     <p>In Game...</p>
     <?php if ($this->get('player') && $this->get('opponent')) : ?>
+      <p>My Name: <?= $this->get('player')['name'] ?></p>
+      <p>My Damage: <?= $this->get('player')['damage'] ?></p>
       <p>My Health:</p>
       <div class="health-bar">
         <div class="hb-current-health" style="width: <?= $this->get('player')['healthPerc'] ?>%;"></div>
       </div>
+      <p>Enemy Name: <?= $this->get('opponent')['name'] ?></p>
+      <p>Enemy Damage: <?= $this->get('opponent')['damage'] ?></p>
       <p>Enemy Health:</p>
       <div class="health-bar">
         <div class="hb-current-health" style="width: <?= $this->get('opponent')['healthPerc'] ?>%;"></div>
