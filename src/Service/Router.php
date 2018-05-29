@@ -64,9 +64,6 @@ class Router {
       if (method_exists($controllerFullName, $methodName)) {
         if ($this->_isPublicMethod('\App\Controller\\' . $controllerName, $methodName)) {
           $controller = new $controllerFullName($this, $methodName);
-          // $controller->$methodName();
-          // load view
-          // $controller->renderView($methodName);
         } else {
           // 404 error redirect; no controller method
           $this->redirect('/');

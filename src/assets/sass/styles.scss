@@ -1,5 +1,7 @@
 $gameContainerBackground: white;
 
+/* BASE ELEMENTS */
+
 html {
   height: 100%;
   font-weight: bold;
@@ -29,26 +31,33 @@ button {
   border-radius: 10px;
   font-weight: bold;
 }
-
 button:hover {
   color: white;
 }
-
-.mt-5 {
-  margin-top: 5px;
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+input[type=submit] {
+  width: 100%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+input[type=submit]:hover {
+  background-color: #45a049;
 }
 
-.mt-10 {
-  margin-top: 10px;
-}
-
-.float-right {
-  float: right;
-}
-
-.float-left {
-  float: left;
-}
+/* CONTAINERS */
 
 .debugger-container {
   box-sizing: border-box;
@@ -56,13 +65,11 @@ button:hover {
   padding-right: 5px;
   display: block;
   width: 100%;
-  // height: 20px;
   background-color: rgba(0, 0, 0, 0.5);
   position: absolute;
   bottom: 0;
   color: white;
 }
-
 .game-container {
   position: relative;
   border-left: 1px solid grey;
@@ -75,7 +82,6 @@ button:hover {
   margin: 0 auto;
   background-color: $gameContainerBackground;
 }
-
 .action-bar-container {
   position: absolute;
   bottom: 50px;
@@ -84,11 +90,9 @@ button:hover {
   right: 0;
   text-align: center;
 }
-
 .game-window-container {
   margin-top: 50px;
 }
-
 .game-log-container {
   padding: 5px;
   margin-top: 50px;
@@ -104,83 +108,12 @@ button:hover {
   }
 }
 
-.inline {
-  display: inline-block;
-}
-
-.center-text {
-  text-align: center;
-}
+/* ELEMENTS */
 
 .error {
   background-color: #ffd1d1;
   color: #f26868;
 }
-
-input[type=text], input[type=password] {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
-
-input[type=submit] {
-    width: 100%;
-    background-color: #4CAF50;
-    color: white;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-input[type=submit]:hover {
-    background-color: #45a049;
-}
-
-
-
-.delayedShow {
-  visibility: hidden;
-  animation: 0s linear 30s forwards delayedShow;
-}
-
-.delayedHide {
-  visibility: visible;
-  animation: 0s linear 30s forwards delayedHide;
-}
-
-@keyframes delayedShow {
-  to {
-    visibility: visible;
-  }
-}
-
-@keyframes delayedHide {
-  to {
-    visibility: hidden;
-  }
-}
-
-.countdown:before {
-    content: '302928272625242322212019181716151413121110090807060504030201';
-    font-family:monospace;
-    display:inline-block;
-    width: 2ch;
-    overflow:hidden;
-    animation:countdowns 30s steps(30);
-}
-
-
-@keyframes countdowns {
-    0% {text-indent:0;}
-    100% {text-indent:-60ch;}
-}
-
 .health-bar {
   position: relative;
   border-radius: 10px;
@@ -193,4 +126,55 @@ input[type=submit]:hover {
     background-color: green;
     width: 100%;
   }
+}
+.countdown:before {
+    content: '302928272625242322212019181716151413121110090807060504030201';
+    font-family:monospace;
+    display:inline-block;
+    width: 2ch;
+    overflow:hidden;
+    animation:countdowns 30s steps(30);
+}
+@keyframes countdowns {
+    0% {text-indent:0;}
+    100% {text-indent:-60ch;}
+}
+.delayedShow {
+  visibility: hidden;
+  animation: 0s linear 30s forwards delayedShow;
+}
+@keyframes delayedShow {
+  to {
+    visibility: visible;
+  }
+}
+.delayedHide {
+  visibility: visible;
+  animation: 0s linear 30s forwards delayedHide;
+}
+@keyframes delayedHide {
+  to {
+    visibility: hidden;
+  }
+}
+
+/* OTHER */
+
+.mt-5 {
+  margin-top: 5px;
+}
+.mt-10 {
+  margin-top: 10px;
+}
+.float-right {
+  float: right;
+}
+.float-left {
+  float: left;
+}
+.inline {
+  display: inline-block;
+}
+.center-text {
+  text-align: center;
 }

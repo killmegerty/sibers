@@ -12,19 +12,6 @@ class User extends Model {
 
   public function getByEmail($email) {
     return $this->_db->fetch("SELECT * FROM {$this->_table} WHERE email = ?", 's', [$email]);
-
-    // $stmt = $this->_db->prepare("SELECT * FROM {$this->_table} WHERE email = ?");
-    // if ($stmt) {
-    //   $stmt->bind_param("s", $email);
-    //   $stmt->execute();
-    //   $res = $stmt->get_result();
-    //   $row = $res->fetch_all(MYSQLI_ASSOC);
-    //   $stmt->close();
-    //   if ($row) {
-    //     return $row[0];
-    //   }
-    // }
-    // return NULL;
   }
 
   public function createWithRelatedData($data) {
