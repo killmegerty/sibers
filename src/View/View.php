@@ -2,7 +2,8 @@
 
 namespace App\View;
 
-class View {
+class View
+{
   protected $_viewFilePath;
   protected $_variables = [];
   protected $_layout = 'default';
@@ -10,12 +11,14 @@ class View {
   protected $_methodName;
   protected $_isRenderView = true;
 
-  function __construct($controllerFullName, $methodName) {
+  public function __construct($controllerFullName, $methodName)
+  {
     $this->_controllerFullName = $controllerFullName;
     $this->_methodName = $methodName;
   }
 
-  public function render() {
+  public function render()
+  {
     if ($this->_isRenderView) {
       $layoutFilePath = dirname(__DIR__) .
         DIRECTORY_SEPARATOR .
@@ -34,7 +37,8 @@ class View {
     }
   }
 
-  public function element($name) {
+  public function element($name)
+  {
     $elementFilePath = dirname(__DIR__) .
       DIRECTORY_SEPARATOR .
       'View' .
@@ -51,7 +55,13 @@ class View {
     }
   }
 
-  protected function _includeViewFile() {
+  public function script($path)
+  {
+    return "<script src='$path'></script>";
+  }
+
+  protected function _includeViewFile()
+  {
     $trimmedClassName = str_replace(['App\Controller\\','Controller'], '', $this->_controllerFullName);
     $this->_viewFilePath = dirname(__DIR__) .
       DIRECTORY_SEPARATOR .
@@ -70,7 +80,8 @@ class View {
     }
   }
 
-  public function set($key, $value = '') {
+  public function set($key, $value = '')
+  {
     if (is_array($key)) {
       $this->_variables = array_merge($this->_variables, $key);
     } else {
@@ -78,21 +89,25 @@ class View {
     }
   }
 
-  public function get($key) {
+  public function get($key)
+  {
     if (isset($this->_variables[$key])) {
       return $this->_variables[$key];
     }
   }
 
-  public function setLayout($layoutName) {
+  public function setLayout($layoutName)
+  {
     $this->_layout = $layoutName;
   }
 
-  public function content() {
+  public function content()
+  {
     $this->_includeViewFile();
   }
 
-  public function disableRender() {
+  public function disableRender()
+  {
     $this->_isRenderView = false;
   }
 }

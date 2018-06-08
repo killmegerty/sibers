@@ -1,5 +1,5 @@
 {
-    "name": "killmegerty/skytecgames",
+    "name": "killmegerty/sibers",
     "type": "project",
     "authors": [
         {
@@ -12,5 +12,7 @@
             "App\\": "src/"
         }
     },
-    "require": {}
+    "require": {
+        "sunra/php-simple-html-dom-parser": "^1.5"
+    }
 }

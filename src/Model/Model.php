@@ -3,44 +3,35 @@
 namespace App\Model;
 
 use App\Service\DB;
-use App\Service\Memcached;
 
-class Model {
+class Model
+{
   protected $_table;
   protected $_db;
-  public $mc;
-  public $debugger;
 
-  function __construct($table) {
+  public function __construct($table)
+  {
     $this->_table = $table;
     $this->_db = new DB();
-    $this->mc = new Memcached();
-    if ($GLOBALS['debugger']) {
-      $this->debugger = $GLOBALS['debugger'];
-    } else {
-      echo 'debugger set error';
-      exit();
-    }
   }
 
-  public function test() {
-    $res = $this->_db->fetch("SELECT * FROM users where id = ?", 'i', [1]);
-    var_dump($res);
-  }
-
-  public function get($id) {
+  public function get($id)
+  {
     return $this->_db->fetch("SELECT * FROM {$this->_table} WHERE id = ?", 'i', [$id]);
   }
 
-  public function getAll() {
-    return $this->_db->fetchAll("SELECT * FROM {$this->_table} WHERE");
+  public function getAll()
+  {
+    return $this->_db->fetchAll("SELECT * FROM {$this->_table}");
   }
 
-  public function delete($id) {
+  public function delete($id)
+  {
     return $this->_db->delete("DELETE FROM FROM {$this->_table} WHERE id = ?", 'i', [$id]);
   }
 
-  public function update($id, $data) {
+  public function update($id, $data)
+  {
     $id = (int)$id;
     $dataStrings = $this->_generateUpdateQueryStrings($data);
 
@@ -48,7 +39,8 @@ class Model {
     return $result;
   }
 
-  public function create($data) {
+  public function create($data)
+  {
     $dataStrings = $this->_generateInsertQueryStrings($data);
 
     $result = $this->_db->query('INSERT INTO ' . $this->_table . ' (' . $dataStrings[0] . ') VALUES (' . $dataStrings[1] . ')');
@@ -58,7 +50,8 @@ class Model {
     return false;
   }
 
-  protected function _generateUpdateQueryStrings($data) {
+  protected function _generateUpdateQueryStrings($data)
+  {
     $output = '';
 
     foreach ($data as $key => $value) {
@@ -74,7 +67,8 @@ class Model {
     return $output;
   }
 
-  protected function _generateInsertQueryStrings($data) {
+  protected function _generateInsertQueryStrings($data)
+  {
     $outputKeys = '';
     $outputValues = '';
 

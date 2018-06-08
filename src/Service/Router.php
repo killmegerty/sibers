@@ -2,7 +2,8 @@
 
 namespace App\Service;
 
-class Router {
+class Router
+{
   protected $_customRoutes = [
     '/' => [
       'controllerName' => 'IndexController',
@@ -11,11 +12,8 @@ class Router {
   ];
   protected $_reservedMethodNames = ['redirect'];
 
-  function __construct() {
-
-  }
-
-  public function initRoutes() {
+  public function initRoutes()
+  {
     $parsedUrl = parse_url($_SERVER['REQUEST_URI']);
 
     // check if custom route exists and load it
@@ -27,7 +25,8 @@ class Router {
     $this->_loadDynamicRoutes();
   }
 
-  protected function _loadDynamicRoutes() {
+  protected function _loadDynamicRoutes()
+  {
     $parsedUrl = parse_url($_SERVER['REQUEST_URI']);
     $explodedUrl = explode('/', $parsedUrl['path']);
 
@@ -50,7 +49,8 @@ class Router {
     $this->_loadControllerMethod($controllerName, $methodName);
   }
 
-  protected function _isPublicMethod($className, $methodName) {
+  protected function _isPublicMethod($className, $methodName)
+  {
     $obj = new \ReflectionMethod($className, $methodName);
     if ($obj->isPublic()) {
       return true;
@@ -58,7 +58,8 @@ class Router {
     return false;
   }
 
-  protected function _loadControllerMethod($controllerName, $methodName) {
+  protected function _loadControllerMethod($controllerName, $methodName)
+  {
     $controllerFullName = '\App\Controller\\' . $controllerName;
     if (class_exists($controllerFullName)) {
       if (method_exists($controllerFullName, $methodName)) {
@@ -78,12 +79,14 @@ class Router {
     }
   }
 
-  public function redirect($url, $statusCode = 303) {
+  public function redirect($url, $statusCode = 303)
+  {
     header('Location: ' . $url, true, $statusCode);
     die();
   }
 
-  public function addCustomRoute($routeUrl, $controllerName, $methodName) {
+  public function addCustomRoute($routeUrl, $controllerName, $methodName)
+  {
     if (in_array($methodName, $this->_reservedMethodNames)) {
       return false;
     }
@@ -94,14 +97,16 @@ class Router {
     ];
   }
 
-  protected function _isCustomRouteExists($url) {
+  protected function _isCustomRouteExists($url)
+  {
     if (isset($this->_customRoutes[$url])) {
       return true;
     }
     return false;
   }
 
-  protected function _loadCustomRoute($url) {
+  protected function _loadCustomRoute($url)
+  {
     $controllerName = $this->_customRoutes[$url]['controllerName'];
     $methodName = $this->_customRoutes[$url]['methodName'];
     $this->_loadControllerMethod($controllerName, $methodName);

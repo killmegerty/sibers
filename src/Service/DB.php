@@ -2,20 +2,15 @@
 
 namespace App\Service;
 
-class DB {
-  public $debugger;
-
-  public function __construct() {
+class DB
+{
+  public function __construct()
+  {
     $this->_dbConnect(DATABASE_HOST, DATABASE_USER, DATABASE_PASSWORD, DATABASE_NAME);
-    if ($GLOBALS['debugger']) {
-      $this->debugger = $GLOBALS['debugger'];
-    } else {
-      echo 'debugger set error';
-      exit();
-    }
   }
 
-  protected function _dbConnect($host, $user, $pass, $dbName) {
+  protected function _dbConnect($host, $user, $pass, $dbName)
+  {
     $this->_db = new \mysqli($host, $user, $pass, $dbName);
     if ($this->_db->connect_errno) {
       // connection error
@@ -24,7 +19,8 @@ class DB {
     }
   }
 
-  public function fetch($queryMask, $paramsTypesMask = '', $params = []) {
+  public function fetch($queryMask, $paramsTypesMask = '', $params = [])
+  {
     $tempParams[] = &$paramsTypesMask;
     for ($i = 0; $i < count($params); $i++) {
       $tempParams[] = &$params[$i];
@@ -32,7 +28,6 @@ class DB {
 
     $stmt = $this->_db->prepare($queryMask);
     if ($stmt) {
-      $this->debugger->startDBRequest();
       if ($paramsTypesMask) {
         call_user_func_array([$stmt, 'bind_param'], $tempParams);
       }
@@ -40,7 +35,6 @@ class DB {
       $res = $stmt->get_result();
       $row = $res->fetch_all(MYSQLI_ASSOC);
       $stmt->close();
-      $this->debugger->endDBRequest();
       if ($row) {
         return $row[0];
       }
@@ -48,7 +42,8 @@ class DB {
     return NULL;
   }
 
-  public function fetchAll($queryMask, $paramsTypesMask = '', $params = []) {
+  public function fetchAll($queryMask, $paramsTypesMask = '', $params = [])
+  {
     $tempParams[] = &$paramsTypesMask;
     for ($i = 0; $i < count($params); $i++) {
       $tempParams[] = &$params[$i];
@@ -56,7 +51,6 @@ class DB {
 
     $stmt = $this->_db->prepare($queryMask);
     if ($stmt) {
-      $this->debugger->startDBRequest();
       if ($paramsTypesMask) {
         call_user_func_array([$stmt, 'bind_param'], $tempParams);
       }
@@ -64,7 +58,6 @@ class DB {
       $res = $stmt->get_result();
       $rows = $res->fetch_all(MYSQLI_ASSOC);
       $stmt->close();
-      $this->debugger->endDBRequest();
       if ($rows) {
         return $rows;
       }
@@ -72,7 +65,8 @@ class DB {
     return NULL;
   }
 
-  public function delete($queryMask, $paramsTypesMask = '', $params = []) {
+  public function delete($queryMask, $paramsTypesMask = '', $params = [])
+  {
     $tempParams[] = &$paramsTypesMask;
     foreach ($params as $param) {
       $tempParams[] = &$param;
@@ -80,14 +74,12 @@ class DB {
 
     $stmt = $this->_db->prepare($queryMask);
     if ($stmt) {
-      $this->debugger->startDBRequest();
       if ($paramsTypesMask) {
         call_user_func_array([$stmt, 'bind_param'], $tempParams);
       }
       $stmt->execute();
       $res = $stmt->get_result();
       $stmt->close();
-      $this->debugger->endDBRequest();
       if ($res) {
         return $res;
       }
@@ -95,14 +87,14 @@ class DB {
     return false;
   }
 
-  public function query($query) {
-    $this->debugger->startDBRequest();
+  public function query($query)
+  {
     $res = $this->_db->query($query);
-    $this->debugger->endDBRequest();
     return $res;
   }
 
-  public function getLastInsertedId() {
+  public function getLastInsertedId()
+  {
     return $this->_db->insert_id;
   }
 

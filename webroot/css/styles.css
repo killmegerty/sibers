@@ -1,168 +1,18 @@
-/* BASE ELEMENTS */
-html {
-  height: 100%;
-  font-weight: bold;
-  color: #515198; }
-
-body {
-  height: 100%;
-  margin: 0;
-  background: linear-gradient(to bottom, #8cb8ff, rgba(140, 184, 255, 0)); }
-
-p {
-  margin-top: 5px;
-  margin-bottom: 5px; }
-
-button {
-  min-width: 100px;
-  box-sizing: border-box;
-  background: linear-gradient(#ceceff, #9898de);
-  border: none;
-  color: #515198;
-  padding: 5px 15px 3px 15px;
-  border-bottom: 4px #6565b5 solid;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  border-radius: 10px;
-  font-weight: bold; }
-
-button:hover {
-  color: white; }
-
-input[type=text], input[type=password] {
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box; }
-
-input[type=submit] {
-  width: 100%;
-  background-color: #4CAF50;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer; }
-
-input[type=submit]:hover {
-  background-color: #45a049; }
-
-/* CONTAINERS */
-.debugger-container {
-  box-sizing: border-box;
-  padding-left: 5px;
-  padding-right: 5px;
-  display: block;
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  position: absolute;
-  bottom: 0;
-  color: white; }
-
-.game-container {
-  position: relative;
-  border-left: 1px solid grey;
-  border-right: 1px solid grey;
-  box-sizing: border-box;
-  padding: 30px 15px;
-  display: block;
-  width: 320px;
-  height: 100%;
-  margin: 0 auto;
-  background-color: white; }
-
-.action-bar-container {
-  position: absolute;
-  bottom: 50px;
-  width: 100%;
-  left: 0;
-  right: 0;
-  text-align: center; }
-
-.game-window-container {
-  margin-top: 50px; }
-
-.game-log-container {
-  padding: 5px;
-  margin-top: 50px;
-  font-size: 12px;
-  color: white;
-  overflow-y: scroll;
+.loader {
+  border: 16px solid #a5a5a5;
+  border-top: 16px solid #343a40;
+  border-radius: 50%;
+  width: 100px;
   height: 100px;
-  background-color: grey; }
-  .game-log-container .game-log-msg {
-    border-bottom: 1px solid white;
-    margin-top: 4px;
-    margin-bottom: 4px; }
+  margin: 0 auto;
+  animation: spin 2s linear infinite;
+}
 
-/* ELEMENTS */
-.error {
-  background-color: #ffd1d1;
-  color: #f26868; }
+.hidden {
+  display: none;
+}
 
-.health-bar {
-  position: relative;
-  border-radius: 10px;
-  width: 150px;
-  height: 10px;
-  background-color: red; }
-  .health-bar .hb-current-health {
-    border-radius: 10px;
-    height: 10px;
-    background-color: green;
-    width: 100%; }
-
-.countdown:before {
-  content: '302928272625242322212019181716151413121110090807060504030201';
-  font-family: monospace;
-  display: inline-block;
-  width: 2ch;
-  overflow: hidden;
-  animation: countdowns 30s steps(30); }
-
-@keyframes countdowns {
-  0% {
-    text-indent: 0; }
-  100% {
-    text-indent: -60ch; } }
-
-.delayedShow {
-  visibility: hidden;
-  animation: 0s linear 30s forwards delayedShow; }
-
-@keyframes delayedShow {
-  to {
-    visibility: visible; } }
-
-.delayedHide {
-  visibility: visible;
-  animation: 0s linear 30s forwards delayedHide; }
-
-@keyframes delayedHide {
-  to {
-    visibility: hidden; } }
-
-/* OTHER */
-.mt-5 {
-  margin-top: 5px; }
-
-.mt-10 {
-  margin-top: 10px; }
-
-.float-right {
-  float: right; }
-
-.float-left {
-  float: left; }
-
-.inline {
-  display: inline-block; }
-
-.center-text {
-  text-align: center; }
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

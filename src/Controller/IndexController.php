@@ -2,49 +2,39 @@
 
 namespace App\Controller;
 use App\Controller\AppController;
-use App\Model\User;
-use App\Service\ACL;
+use App\Model\SearchEngine;
 
-class IndexController extends AppController {
-  function __construct($router, $methodName) {
-    parent::__construct($router, $methodName);
+class IndexController extends AppController
+{
+
+  public function index()
+  {
+    $searchEngineModel = new SearchEngine();
+    $searchEngines = $searchEngineModel->getAll();
+    $this->view->set('searchEngines', $searchEngines);
   }
 
-  public function index() {
-    $this->view->set('test', json_encode(['test' => 'asdasd']));
-  }
-
-  public function login() {
-    if (isset($_POST['email']) && isset($_POST['password'])) {
-      $userModel = new User();
-      $user = $userModel->getByEmail($_POST['email']);
-      if ($user) {
-        $result = ACL::login($_POST['email'], $_POST['password']);
-        if (!$result) {
-          $this->view->set([
-            'error' => 'Wrong password',
-            'email' => $_POST['email']
-          ]);
-        }
-      } else {
-        $user = $userModel->createWithRelatedData([
-          'email' => $_POST['email'],
-          'password' => ACL::hashUserPassword($_POST['password'])
-        ]);
-        if ($user) {
-          ACL::login($_POST['email'], $_POST['password']);
-        }
-      }
-    }
-    if (ACL::isAuthorized()) {
-      $this->_redirect('/game');
-    }
-  }
-
-  public function logout() {
-    if (isset($_POST['logout'])) {
-      ACL::logout();
+  public function ajaxSearch()
+  {
+    if (!$this->isAjax()) {
       $this->_redirect('/');
     }
+
+    if (!isset($_POST['engineId']) || empty($_POST['engineId']) ||
+    !isset($_POST['query']) || empty($_POST['query'])) {
+      $this->view->disableRender();
+      echo 'Error: Provide data: \'engineId\' and \'query\'';
+      return;
+    }
+
+    $this->view->setLayout('empty');
+    $items = [];
+    $engineId = (int)$_POST['engineId'];
+    $query = urlencode($_POST['query']);
+
+    $searchEngineModel = new SearchEngine();
+    $items = $searchEngineModel->searchQuery($engineId, $query);
+    $this->view->set('items', $items);
   }
+
 }
