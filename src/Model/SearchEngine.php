@@ -20,7 +20,7 @@ class SearchEngine extends Model
    *
    * @param string $searchEngineId
    * @param string $q Search query
-   * @return array [['title' => ..., 'link' => ..., 'description' => ...], ...]
+   * @return boolean|array [['title' => ..., 'link' => ..., 'description' => ...], ...]
    */
   public function searchQuery($searchEngineId, $q)
   {
@@ -30,6 +30,7 @@ class SearchEngine extends Model
       return false;
     }
 
+    $q = urlencode($q);
     $html = $this->httpRequester->urlRequest($searchEngine['query_url'] . $q);
     return $this->_parseHtmlResults(
       $html,

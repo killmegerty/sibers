@@ -30,7 +30,7 @@ class IndexController extends AppController
 
     $items = [];
     $engineId = (int)$_POST['engineId'];
-    $query = urlencode($_POST['query']);
+    $query = $_POST['query'];
 
     $searchEngineModel = new SearchEngine();
     $items = $searchEngineModel->searchQuery($engineId, $query);
