@@ -20,14 +20,14 @@ class IndexController extends AppController
       $this->_redirect('/');
     }
 
+    $this->view->setLayout('empty');
+
     if (!isset($_POST['engineId']) || empty($_POST['engineId']) ||
     !isset($_POST['query']) || empty($_POST['query'])) {
-      $this->view->disableRender();
-      echo 'Error: Provide data: \'engineId\' and \'query\'';
+      $this->view->set('error', "'query' and 'engineId' should be provided");
       return;
     }
 
-    $this->view->setLayout('empty');
     $items = [];
     $engineId = (int)$_POST['engineId'];
     $query = urlencode($_POST['query']);

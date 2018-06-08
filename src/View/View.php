@@ -31,8 +31,7 @@ class View
       if (file_exists($layoutFilePath)) {
         include $layoutFilePath;
       } else {
-        // 404 error; layout not found
-        echo '404 error; layout not found';
+        throw new \Exception('Layout file not found');
       }
     }
   }
@@ -50,8 +49,7 @@ class View
     if (file_exists($elementFilePath)) {
       include $elementFilePath;
     } else {
-      // 404 error; element not found
-      echo '404 error; element not found';
+      throw new \Exception('Element file not found');
     }
   }
 
@@ -75,8 +73,7 @@ class View
     if (file_exists($this->_viewFilePath)) {
       include $this->_viewFilePath;
     } else {
-      // 404 error; view not found
-      echo '404 error; view not found';
+      throw new \Exception('View file not found');
     }
   }
 

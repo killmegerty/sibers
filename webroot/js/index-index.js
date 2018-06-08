@@ -4,11 +4,21 @@ $(document).ready(() => {
     $('#search-engine-dropdown').text($(this).text()).attr('data-engine-id', engineId);
   });
 
+  $('#search-query').on('keypress', function(e) {
+    if (e.keyCode == 13) {
+      $('#search-btn').click();
+    }
+  });
+
   $('#search-btn').on('click', function() {
     let searchQuery = $('#search-query').val();
     let engineId = $('#search-engine-dropdown').attr('data-engine-id');
     let searchResultsEl = $('#search-results');
     let loaderEl = $('.loader');
+
+    if (searchQuery.length == 0) {
+      return;
+    }
 
     $.ajax({
       url: '/index/ajaxSearch',

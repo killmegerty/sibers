@@ -6,5 +6,12 @@ require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR 
 // config\constants
 require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'config.php';
 
-// router
-require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'routes.php';
+use App\Service\ErrorHandler;
+
+try {
+  // router
+  require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'routes.php';
+} catch (\Exception $e) {
+  $errorHandler = new ErrorHandler($e);
+  $errorHandler->render();
+}

@@ -13,8 +13,7 @@ class DB
   {
     $this->_db = new \mysqli($host, $user, $pass, $dbName);
     if ($this->_db->connect_errno) {
-      // connection error
-      echo 'db connect error';
+      throw new \Exception('DB connection error');
       exit();
     }
   }
