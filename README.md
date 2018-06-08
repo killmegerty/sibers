@@ -13,7 +13,7 @@ mysql> GRANT ALL PRIVILEGES ON minenko_konstantin.* TO minenko_konstantin@localh
 
 Накатить дамп
 ```sh
-$ mysql -umineko_konstantin -pminenko_konstantin minenko_konstantin < __sql/minenko_konstantin-2018-06-08.sql
+$ mysql -uminenko_konstantin -pminenko_konstantin minenko_konstantin < __sql/minenko_konstantin-2018-06-08.sql
 ```
 
 
