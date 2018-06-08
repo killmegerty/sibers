@@ -15,9 +15,16 @@ class SearchEngine extends Model
     $this->httpRequester = new HttpRequester();
   }
 
-  public function searchQuery($id, $q)
+  /**
+   * Get associative array with search results data
+   *
+   * @param string $searchEngineId
+   * @param string $q Search query
+   * @return array [['title' => ..., 'link' => ..., 'description' => ...], ...]
+   */
+  public function searchQuery($searchEngineId, $q)
   {
-    $searchEngine = $this->get($id);
+    $searchEngine = $this->get($searchEngineId);
 
     if (!$searchEngine) {
       return false;
@@ -33,6 +40,16 @@ class SearchEngine extends Model
     );
   }
 
+  /**
+   * Parse search result from html document string
+   *
+   * @param string $html Full html page with search results
+   * @param string $itemBlockSel Selector of item block for HtmlDomParser
+   * @param string $childTitleSel Selector of item block's children with title for HtmlDomParser
+   * @param string $childHrefSel Selector of item block's children with href for HtmlDomParser
+   * @param string $childDescSel Selector of item block's children with description for HtmlDomParser
+   * @return array [['title' => ..., 'link' => ..., 'description' => ...], ...]
+   */
   protected function _parseHtmlResults($html, $itemBlockSel, $childTitleSel, $childHrefSel, $childDescSel)
   {
     $items = [];

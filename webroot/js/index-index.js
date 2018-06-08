@@ -1,4 +1,5 @@
 $(document).ready(() => {
+  // replace text in dropdown button after select menu item
   $('#search-engine-dropdown-menu').on('click', 'a', function() {
     let engineId = $(this).attr('data-engine-id');
     $('#search-engine-dropdown').text($(this).text()).attr('data-engine-id', engineId);
